@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 pub struct Tap {
-    count: u128,
+    count: u16,
     cumulative_interval: Duration,
     last_tap: Instant,
 }
@@ -31,11 +31,11 @@ impl Tap {
         self.last_tap = Instant::now();
     }
 
-    pub fn bpm(&self) -> u128 {
-        60000 / (self.cumulative_interval.as_millis() / self.count)
+    pub fn bpm(&self) -> u16 {
+        60000 / (self.cumulative_interval.as_millis() / self.count as u128) as u16
     }
 
-    pub fn count(&self) -> u128 {
+    pub fn count(&self) -> u16 {
         self.count
     }
 
