@@ -24,6 +24,7 @@ impl Tap {
     pub fn tap(&mut self) {
         self.count += 1;
 
+        // ignore first interval (time between instantiation and first tap)
         if self.count > 0 {
             self.cumulative_interval += self.last_tap.elapsed();
         }
@@ -31,8 +32,12 @@ impl Tap {
         self.last_tap = Instant::now();
     }
 
-    pub fn bpm(&self) -> u16 {
-        60000 / (self.cumulative_interval.as_millis() / self.count as u128) as u16
+    pub fn bpm(&self) -> Result<u16, ()> {
+        if self.count > 0 {
+            Ok(60000 / (self.cumulative_interval.as_millis() / self.count as u128) as u16)
+        } else {
+            Err(())
+        }
     }
 
     pub fn count(&self) -> u16 {
