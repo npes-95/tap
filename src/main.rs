@@ -53,6 +53,9 @@ fn main() {
                 if tap.last_interval() > reset_interval {
                     tap.reset();
                     print!("cleared count");
+                } else if tap.count() < 1 {
+                    tap.tap();
+                    print!("count: {} -- bpm: n/a", tap.count());
                 } else {
                     tap.tap();
                     print!("count: {} -- bpm: {}", tap.count(), tap.bpm().unwrap());
