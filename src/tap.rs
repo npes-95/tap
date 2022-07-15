@@ -31,9 +31,9 @@ impl Tap {
         self.last_tap = Instant::now();
     }
 
-    pub fn bpm(&self) -> Result<u16, ()> {
+    pub fn bpm(&self) -> Result<f32, ()> {
         if self.count > 1 {
-            Ok(60000 / (self.cumulative_interval.as_millis() / (self.count - 1) as u128) as u16)
+            Ok(60000_f32 / (self.cumulative_interval.as_millis() as f32 / (self.count - 1) as f32))
         } else {
             Err(())
         }
@@ -78,8 +78,8 @@ mod tests {
             interval.mul((t.count - 1).into()).as_secs_f32(),
             0.02
         );
-        assert!(t.bpm().unwrap() > 570 as u16);
-        assert!(t.bpm().unwrap() < 630 as u16);
+        assert!(t.bpm().unwrap() > 570_f32);
+        assert!(t.bpm().unwrap() < 630_f32);
     }
 
     #[test]

@@ -58,7 +58,7 @@ fn main() {
                     print!("count: {} -- bpm: n/a", tap.count());
                 } else {
                     tap.tap();
-                    print!("count: {} -- bpm: {}", tap.count(), tap.bpm().unwrap());
+                    print!("count: {} -- bpm: {:.2}", tap.count(), tap.bpm().unwrap());
                 }
 
                 ()
