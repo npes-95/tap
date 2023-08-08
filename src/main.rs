@@ -6,7 +6,6 @@ mod tap;
 use crate::convert::{Bpm, Notation};
 use crate::tap::Tap;
 use std::io::{stdin, stdout, Write};
-use std::time::Duration;
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -31,8 +30,6 @@ fn main() {
 
     let mut tap = Tap::new();
 
-    let reset_interval = Duration::from_secs(2);
-
     for c in stdin.keys() {
         write!(
             stdout,
@@ -52,10 +49,7 @@ fn main() {
                 ()
             }
             _ => {
-                if tap.last_interval() > reset_interval {
-                    tap.reset();
-                    print!("reset count");
-                } else if tap.count() < 1 {
+                if tap.count() < 1 {
                     tap.tap();
                     println!("count: {}", tap.count());
                 } else {

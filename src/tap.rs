@@ -35,10 +35,6 @@ impl Tap {
         self.count
     }
 
-    pub fn last_interval(&self) -> Duration {
-        self.last_tap.elapsed()
-    }
-
     pub fn average_interval(&self) -> Result<Duration, ()> {
         if self.count > 1 {
             Ok(self.cumulative_interval.div_f32((self.count - 1) as f32))
