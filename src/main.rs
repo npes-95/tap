@@ -1,7 +1,9 @@
 extern crate termion;
 
+mod convert;
 mod tap;
 
+use crate::convert::{Bpm, Notation};
 use crate::tap::Tap;
 use std::io::{stdin, stdout, Write};
 use std::time::Duration;
@@ -55,10 +57,38 @@ fn main() {
                     print!("cleared count");
                 } else if tap.count() < 1 {
                     tap.tap();
-                    print!("count: {} -- bpm: n/a", tap.count());
+                    println!("count: {}", tap.count());
                 } else {
                     tap.tap();
-                    print!("count: {} -- bpm: {:.2}", tap.count(), tap.bpm().unwrap());
+
+                    let pulse = tap.average_interval().unwrap();
+                    let bpm = Bpm::new(pulse);
+                    let notation = Notation::new(pulse);
+
+                    println!("count: {}", tap.count());
+                    println!("\r");
+                    println!("\rbpm: {:.2}", bpm.value);
+                    println!("\r");
+                    println!("\rquarter: {} ms", notation.quarter.as_millis());
+                    println!(
+                        "\rdotted quarter: {} ms",
+                        notation.dotted_quarter.as_millis()
+                    );
+                    println!("\r");
+                    println!("\reighth: {} ms", notation.eighth.as_millis());
+                    println!("\rdotted eighth: {} ms", notation.dotted_eighth.as_millis());
+                    println!("\r");
+                    println!("\rsixteenth: {} ms", notation.sixteenth.as_millis());
+                    println!(
+                        "\rdotted sixteenth: {} ms",
+                        notation.dotted_sixteenth.as_millis()
+                    );
+                    println!("\r");
+                    println!("\rthirty-second: {} ms", notation.thirtysecond.as_millis());
+                    println!(
+                        "\rdotted thirty-second: {} ms",
+                        notation.dotted_thirtysecond.as_millis()
+                    );
                 }
 
                 ()

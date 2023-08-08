@@ -31,14 +31,6 @@ impl Tap {
         self.last_tap = Instant::now();
     }
 
-    pub fn bpm(&self) -> Result<f32, ()> {
-        if self.count > 1 {
-            Ok(60000_f32 / (self.cumulative_interval.as_millis() as f32 / (self.count - 1) as f32))
-        } else {
-            Err(())
-        }
-    }
-
     pub fn count(&self) -> u16 {
         self.count
     }
@@ -46,13 +38,19 @@ impl Tap {
     pub fn last_interval(&self) -> Duration {
         self.last_tap.elapsed()
     }
+
+    pub fn average_interval(&self) -> Result<Duration, ()> {
+        if self.count > 1 {
+            Ok(self.cumulative_interval.div_f32((self.count - 1) as f32))
+        } else {
+            Err(())
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use assert_approx_eq::assert_approx_eq;
-    use std::{ops::Mul, thread::sleep};
 
     #[test]
     fn init() {
@@ -62,30 +60,9 @@ mod tests {
     }
 
     #[test]
-    fn tap() {
-        let interval = Duration::from_millis(100);
-        let mut t = Tap::new();
-
-        t.tap();
-        sleep(interval);
-        t.tap();
-
-        assert_eq!(t.count, 2);
-
-        // testing with time intervals is a bit flaky, so approx values will do
-        assert_approx_eq!(
-            t.cumulative_interval.as_secs_f32(),
-            interval.mul((t.count - 1).into()).as_secs_f32(),
-            0.02
-        );
-        assert!(t.bpm().unwrap() > 570_f32);
-        assert!(t.bpm().unwrap() < 630_f32);
-    }
-
-    #[test]
     fn not_enough_taps() {
         let t = Tap::new();
 
-        assert_eq!(t.bpm(), Err(()));
+        assert_eq!(t.average_interval(), Err(()));
     }
 }
