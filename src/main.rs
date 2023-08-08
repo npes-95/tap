@@ -12,7 +12,7 @@ use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 
 fn usage() {
-    print!("[q]: quit | [c]: clear tap count | [h]: this help")
+    print!("[q]: quit | [c|r]: clear/reset tap count | [h]: this help")
 }
 
 fn main() {
@@ -46,15 +46,15 @@ fn main() {
         match c.unwrap() {
             Key::Char('q') => break,
             Key::Char('h') => usage(),
-            Key::Char('c') => {
+            Key::Char('c') | Key::Char('r') => {
                 tap.reset();
-                print!("cleared count");
+                print!("reset count");
                 ()
             }
             _ => {
                 if tap.last_interval() > reset_interval {
                     tap.reset();
-                    print!("cleared count");
+                    print!("reset count");
                 } else if tap.count() < 1 {
                     tap.tap();
                     println!("count: {}", tap.count());
