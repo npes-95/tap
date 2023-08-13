@@ -1,3 +1,4 @@
+use std::fmt;
 use std::time::Duration;
 
 pub struct Notation {
@@ -26,6 +27,30 @@ impl Notation {
     }
 }
 
+impl fmt::Display for Notation {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "quarter: {} ms
+            \rdotted quarter: {} ms
+            \reighth: {} ms
+            \rdotted eighth: {} ms
+            \rsixteenth: {} ms
+            \rdotted sixteenth: {} ms
+            \rthirtysecond: {} ms
+            \rdotted thirtysecond: {} ms",
+            self.quarter.as_millis(),
+            self.dotted_quarter.as_millis(),
+            self.eighth.as_millis(),
+            self.dotted_eighth.as_millis(),
+            self.sixteenth.as_millis(),
+            self.dotted_sixteenth.as_millis(),
+            self.thirtysecond.as_millis(),
+            self.dotted_thirtysecond.as_millis()
+        )
+    }
+}
+
 pub struct Bpm {
     pub value: f32,
 }
@@ -37,5 +62,11 @@ impl Bpm {
         Self {
             value: MINUTE_AS_MS / pulse.as_millis() as f32,
         }
+    }
+}
+
+impl fmt::Display for Bpm {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:.2}", self.value)
     }
 }

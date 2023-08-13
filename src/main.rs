@@ -59,30 +59,9 @@ fn main() {
                     let bpm = Bpm::new(pulse);
                     let notation = Notation::new(pulse);
 
-                    println!("count: {}", tap.count());
-                    println!("\r");
-                    println!("\rbpm: {:.2}", bpm.value);
-                    println!("\r");
-                    println!("\rquarter: {} ms", notation.quarter.as_millis());
-                    println!(
-                        "\rdotted quarter: {} ms",
-                        notation.dotted_quarter.as_millis()
-                    );
-                    println!("\r");
-                    println!("\reighth: {} ms", notation.eighth.as_millis());
-                    println!("\rdotted eighth: {} ms", notation.dotted_eighth.as_millis());
-                    println!("\r");
-                    println!("\rsixteenth: {} ms", notation.sixteenth.as_millis());
-                    println!(
-                        "\rdotted sixteenth: {} ms",
-                        notation.dotted_sixteenth.as_millis()
-                    );
-                    println!("\r");
-                    println!("\rthirty-second: {} ms", notation.thirtysecond.as_millis());
-                    println!(
-                        "\rdotted thirty-second: {} ms",
-                        notation.dotted_thirtysecond.as_millis()
-                    );
+                    println!("count: {}\n", tap.count());
+                    println!("\rbpm: {}\n", bpm);
+                    println!("\r{}", notation);
                 }
 
                 ()
