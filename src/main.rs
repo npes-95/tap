@@ -14,19 +14,18 @@ fn usage() {
     print!("[q]: quit | [c|r]: clear/reset tap count | [h]: this help")
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let stdin = stdin();
-    let mut stdout = stdout().into_raw_mode().unwrap();
+    let mut stdout = stdout().into_raw_mode()?;
     write!(
         stdout,
         "{}{}{}tap - bpm calculator",
         termion::cursor::Goto(1, 1),
         termion::cursor::Hide,
         termion::clear::All
-    )
-    .unwrap();
+    )?;
 
-    stdout.flush().unwrap();
+    stdout.flush()?;
 
     let mut tap = Tap::new();
 
@@ -37,10 +36,9 @@ fn main() {
             termion::cursor::Goto(1, 1),
             termion::cursor::Hide,
             termion::clear::All
-        )
-        .unwrap();
+        )?;
 
-        match c.unwrap() {
+        match c? {
             Key::Char('q') => break,
             Key::Char('h') => usage(),
             Key::Char('c') | Key::Char('r') => {
@@ -55,7 +53,7 @@ fn main() {
                 } else {
                     tap.tap();
 
-                    let pulse = tap.average_interval().unwrap();
+                    let pulse = tap.average_interval();
                     let bpm = Bpm::new(pulse);
                     let notation = Notation::new(pulse);
 
@@ -68,8 +66,10 @@ fn main() {
             }
         }
 
-        stdout.flush().unwrap();
+        stdout.flush()?;
     }
 
-    write!(stdout, "{}", termion::cursor::Show).unwrap();
+    write!(stdout, "{}", termion::cursor::Show)?;
+
+    Ok(())
 }

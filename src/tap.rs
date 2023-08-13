@@ -35,11 +35,11 @@ impl Tap {
         self.count
     }
 
-    pub fn average_interval(&self) -> Result<Duration, ()> {
+    pub fn average_interval(&self) -> Duration {
         if self.count > 1 {
-            Ok(self.cumulative_interval.div_f32((self.count - 1) as f32))
+            self.cumulative_interval.div_f32((self.count - 1) as f32)
         } else {
-            Err(())
+            panic!("Cannot determine average interval with less than 2 taps.");
         }
     }
 }
@@ -56,9 +56,10 @@ mod tests {
     }
 
     #[test]
+    #[should_panic]
     fn not_enough_taps() {
         let t = Tap::new();
 
-        assert_eq!(t.average_interval(), Err(()));
+        t.average_interval();
     }
 }
