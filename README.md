@@ -6,7 +6,7 @@ command line bpm calculator.
 
 ```
 q - quit
-c - clear the current counter
+c | r - clear/reset the current counter
 h - display help
 ```
 
